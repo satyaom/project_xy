@@ -1,4 +1,4 @@
-package com.example.project_xy_backend.Controller;
+package com.example.project_xy_backend.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
