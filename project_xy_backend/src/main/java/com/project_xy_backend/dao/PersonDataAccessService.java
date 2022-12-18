@@ -1,50 +1,63 @@
 package com.project_xy_backend.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.project_xy_backend.model.Person;
 
-@Repository("fakeDao")
-public class PersonDataAccessService implements PersonDao {
-    private static List<Person> DB = new ArrayList<>();
-    @Override
-    public int insertPerson(UUID id, Person person) {
-        DB.add(new Person(id, person.getName()));
-        return 1;
-    }
-    @Override
-    public List<Person> selectAllPeople() {
-        return DB;
-    }
-    @Override
-    public Optional<Person> selectPersonById(UUID id) {
-        return DB.stream()
-                .filter(person -> person.getId().equals(id))
-                .findFirst();
-    }
-    @Override
-    public int deletePersonById(UUID id) {
-        Optional<Person> personMaybe = selectPersonById(id);
-        if (personMaybe.isEmpty()) {
-            return 0;
-        }
-        DB.remove(personMaybe.get());
-        return 1;
-    }
-    @Override
-    public int updatePersonById(UUID id, Person person_update) {
-        return selectPersonById(id).map(person -> {
-            int indexOfPersonToUpdate  = DB.indexOf(person);
-            if(indexOfPersonToUpdate >= 0) {
-                DB.set(indexOfPersonToUpdate, new Person(id, person_update.getName()));
-                return 1;
-            }
-            return 0;
-        }).orElse(0);
-    }  
+@Repository("postgres")
+public class PersonDataAccessService implements PersonDao{
+
+  private final JdbcTemplate jdbcTemplate;
+
+  @Autowired
+  public PersonDataAccessService(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
+  }
+
+  @Override
+  public int insertPerson(UUID id, Person person) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public List<Person> selectAllPeople() {
+    final String sql = "select id, name from person";
+     List<Person> people = jdbcTemplate.query(sql, (rs, i) -> {
+        UUID id = UUID.fromString(rs.getString("id"));
+        String name = rs.getString("name");
+        return new Person(id, name);
+      });
+      return people;
+  }
+
+  @Override
+  public Optional<Person> selectPersonById(UUID id) {
+    final String sql = "select id, name from person where id = ?";
+    Person person = jdbcTemplate.queryForObject(sql, (rs, i) -> {
+      UUID person_id = UUID.fromString(rs.getString("id"));
+      String name = rs.getString("name");
+      return new Person(person_id, name);
+    }, new Object[]{id});
+    return Optional.ofNullable(person);
+  }
+
+  @Override
+  public int deletePersonById(UUID id) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public int updatePersonById(UUID id, Person person) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+  
 }
