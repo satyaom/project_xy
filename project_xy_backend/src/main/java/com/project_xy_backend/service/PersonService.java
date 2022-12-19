@@ -2,7 +2,6 @@ package com.project_xy_backend.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project_xy_backend.dao.PersonRepository;
@@ -13,7 +12,6 @@ public class PersonService{
 
   private final PersonRepository personRepository;
 
-  @Autowired
   public PersonService(PersonRepository personRepository) {
     this.personRepository = personRepository;
   }
