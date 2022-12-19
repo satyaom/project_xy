@@ -45,7 +45,7 @@ public class Person{
       this.dob = dob;
       this.email = email;
     }
-    
+
     public String getEmail() {
       return email;
     }
@@ -61,4 +61,17 @@ public class Person{
     public Long getId() {
         return id;
     }
+    public void setAge(Integer age) {
+      this.age = age;
+    }
+    public void setEmail(String email) {
+      this.email = email;
+    }
+    public void setDob(LocalDate dob) {
+      this.dob = dob;
+    }
+    public void setName(String name) {
+      this.name = name;
+    }
+
 }
