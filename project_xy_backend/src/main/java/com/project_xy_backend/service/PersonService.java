@@ -1,44 +1,32 @@
 package com.project_xy_backend.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.project_xy_backend.dao.PersonDao;
+import com.project_xy_backend.dao.PersonRepository;
 import com.project_xy_backend.model.Person;
 
 @Service
-public class PersonService {
-    
-    private final PersonDao personDao;
+public class PersonService{
 
-    @Autowired
-    public PersonService(@Qualifier("postgres") PersonDao personDao) {
-        this.personDao = personDao;
-    }
+  private final PersonRepository personRepository;
 
-    public int addPerson(Person person) {
-        return personDao.insertPerson(person);
-    }
+  @Autowired
+  public PersonService(PersonRepository personRepository) {
+    this.personRepository = personRepository;
+  }
 
-    public List<Person> getAllPeople() {
-        return personDao.selectAllPeople();
-    }
+  public List<Person> getAllPerson() {
+    return personRepository.findAll();
+  }
 
-    public Optional<Person> getPersonById(UUID id) {
-        return personDao.selectPersonById(id);
+  public void addNewPerson(Person person) {
+    if(personRepository.findPersonByEmail(person.getEmail()).isPresent()) {
+      throw new IllegalStateException("email taken");
     }
-
-    public int deletePerson(UUID id) {
-        return personDao.deletePersonById(id);
-    }
-
-    public int updatePerson(UUID id, Person newPerson) {
-        return personDao.updatePersonById(id, newPerson);
-    }
+    personRepository.save(person);
+  }
 
 }
