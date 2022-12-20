@@ -13,6 +13,7 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
   @Query("SELECT s FROM Person s WHERE s.email = ?1")
   Optional<Person> findPersonByEmail(String email);
 
+  //Can be used to update table for patch or put request
   @Modifying
   @Query("UPDATE Person s SET s.name = :newPersonName WHERE s.id = :id")
   void updatedPeson(@Param("id") Long id, @Param("newPersonName") String newPersonName);

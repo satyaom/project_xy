@@ -44,7 +44,7 @@ public class PersonService{
     Optional<Person> oldPerson = personRepository.findById(id);
     if(oldPerson.isPresent()){
       System.out.println(newPersonName);
-      personRepository.updatedPeson(id, newPersonName);
+      oldPerson.get().setName(newPersonName);
      } else {
       throw new IllegalAccessError("wrong id");
      }
